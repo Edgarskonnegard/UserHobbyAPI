@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace UserHobbyApi.Models;
+namespace UserHobbyAPI.Models;
 
 public class UserHobby
 {
@@ -10,6 +10,6 @@ public class UserHobby
     public int HobbyId { get; set; }
     public Hobby Hobby { get; set; }
 
-    public string Url { get; set;} = string.Empty;
+    public ICollection<Link> Links { get; set;} = new List<Link>();
 
 }

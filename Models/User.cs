@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace UserHobbyApi.Models;
+namespace UserHobbyAPI.Models;
 
 public class User
 {
@@ -9,6 +9,8 @@ public class User
     public string FirstName { get; set;} = string.Empty;
     public string LastName { get; set;} = string.Empty;
     public int BirthYear { get; set;}
+
+    public string PhoneNumber { get; set;} = string.Empty;
     public ICollection<UserHobby> UserHobbies { get; set;}
 
 }
