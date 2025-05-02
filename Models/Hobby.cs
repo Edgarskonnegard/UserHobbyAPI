@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace UserHobbyApi.Models;
+namespace UserHobbyAPI.Models;
 
 public class Hobby
 {

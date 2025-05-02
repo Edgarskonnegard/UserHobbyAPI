@@ -11,8 +11,8 @@ using UserHobbyAPI.Data;
 namespace UserHobbyAPI.Migrations
 {
     [DbContext(typeof(UserHobbyDbContext))]
-    [Migration("20250423161635_AddedSeedData")]
-    partial class AddedSeedData
+    [Migration("20250502152559_AddedPhoneNumberToUserClass")]
+    partial class AddedPhoneNumberToUserClass
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace UserHobbyAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("UserHobbyApi.Models.Hobby", b =>
+            modelBuilder.Entity("UserHobbyAPI.Models.Hobby", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,49 @@ namespace UserHobbyAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("UserHobbyApi.Models.User", b =>
+            modelBuilder.Entity("UserHobbyAPI.Models.Link", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserHobbyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserHobbyId");
+
+                    b.ToTable("Links");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Url = "https://google.com",
+                            UserHobbyId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Url = "https://facebook.com",
+                            UserHobbyId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Url = "https://github.com",
+                            UserHobbyId = 3
+                        });
+                });
+
+            modelBuilder.Entity("UserHobbyAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -78,6 +120,10 @@ namespace UserHobbyAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -88,18 +134,20 @@ namespace UserHobbyAPI.Migrations
                             Id = 1,
                             BirthYear = 1990,
                             FirstName = "Anna",
-                            LastName = "Andersson"
+                            LastName = "Andersson",
+                            PhoneNumber = "073-456-78-99"
                         },
                         new
                         {
                             Id = 2,
                             BirthYear = 1985,
                             FirstName = "Björn",
-                            LastName = "Berg"
+                            LastName = "Berg",
+                            PhoneNumber = "072-191-66-02"
                         });
                 });
 
-            modelBuilder.Entity("UserHobbyApi.Models.UserHobby", b =>
+            modelBuilder.Entity("UserHobbyAPI.Models.UserHobby", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,10 +157,6 @@ namespace UserHobbyAPI.Migrations
 
                     b.Property<int>("HobbyId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -130,34 +174,42 @@ namespace UserHobbyAPI.Migrations
                         {
                             Id = 1,
                             HobbyId = 1,
-                            Url = "https://google.com",
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             HobbyId = 2,
-                            Url = "https://facebook.com",
                             UserId = 1
                         },
                         new
                         {
                             Id = 3,
                             HobbyId = 2,
-                            Url = "https://github.com",
                             UserId = 2
                         });
                 });
 
-            modelBuilder.Entity("UserHobbyApi.Models.UserHobby", b =>
+            modelBuilder.Entity("UserHobbyAPI.Models.Link", b =>
                 {
-                    b.HasOne("UserHobbyApi.Models.Hobby", "Hobby")
+                    b.HasOne("UserHobbyAPI.Models.UserHobby", "UserHobby")
+                        .WithMany("Links")
+                        .HasForeignKey("UserHobbyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserHobby");
+                });
+
+            modelBuilder.Entity("UserHobbyAPI.Models.UserHobby", b =>
+                {
+                    b.HasOne("UserHobbyAPI.Models.Hobby", "Hobby")
                         .WithMany("UserHobbies")
                         .HasForeignKey("HobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UserHobbyApi.Models.User", "User")
+                    b.HasOne("UserHobbyAPI.Models.User", "User")
                         .WithMany("UserHobbies")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -168,14 +220,19 @@ namespace UserHobbyAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("UserHobbyApi.Models.Hobby", b =>
+            modelBuilder.Entity("UserHobbyAPI.Models.Hobby", b =>
                 {
                     b.Navigation("UserHobbies");
                 });
 
-            modelBuilder.Entity("UserHobbyApi.Models.User", b =>
+            modelBuilder.Entity("UserHobbyAPI.Models.User", b =>
                 {
                     b.Navigation("UserHobbies");
+                });
+
+            modelBuilder.Entity("UserHobbyAPI.Models.UserHobby", b =>
+                {
+                    b.Navigation("Links");
                 });
 #pragma warning restore 612, 618
         }
