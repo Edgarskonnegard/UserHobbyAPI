@@ -19,7 +19,8 @@ public class UserRepository : IUserRepository
         var newUser = new User{
             FirstName = dto.FirstName,
             LastName = dto.LastName,
-            BirthYear = dto.BirthYear
+            BirthYear = dto.BirthYear,
+            PhoneNumber = dto.PhoneNumber
         };
 
         _context.Users.Add(newUser);

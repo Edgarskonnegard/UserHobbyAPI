@@ -37,6 +37,6 @@ public class UserController : ControllerBase
         {
             return BadRequest("User or hobby does not exist.");
         }
-        return CreatedAtAction(nameof(GetUserById), result.Id, result);
+        return CreatedAtAction(nameof(GetUserById), new {Id = result.Id}, result);
     }
 }
